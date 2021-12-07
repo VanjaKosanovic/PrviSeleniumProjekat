@@ -103,14 +103,30 @@ public class DemoTest {
         Select sort = new Select(dropdown);
         sort.selectByValue("hilo");
 
-
         Thread.sleep(10000);
         String priceSorted = listaProizvoda.get(0).findElement(By.xpath("//div[@class = 'inventory_item_price']")).getText();
 
         assert !priceSorted.equals(priceUnsorted) : "Sorted and unsorted prices should be different. New sorted price is: " +priceSorted;
 
-        WebElement addToChartButton = driver.findElement(By.id("add-to-cart-sauce-labs-fleece-jacket"));
+//        WebElement addToChartButton = driver.findElement(By.id("add-to-cart-sauce-labs-fleece-jacket"));
 
+    }
+
+    @Test
+    public void checkSortingButton () throws InterruptedException {
+        driver = new ChromeDriver();
+        loginToHomePage(driver, userName);
+        List<WebElement> products =  driver.findElementsByXPath("//*[contains (@class, 'inventory_item_description')]");
+
+        String firstElementOfUnsortedList = products.get(0).findElement(By.className("inventory_item_price")).getText();
+        WebElement sortButton = driver.findElementByClassName("product_sort_container");
+        Select sort = new Select(sortButton);
+        sort.selectByValue("hilo");
+        Thread.sleep(10000);
+//        products =  driver.findElementsByXPath("//*[contains (@class, 'inventory_item_description')]");
+        String firstElementOfSortedList = products.get(0).findElement(By.className("inventory_item_price")).getText();
+//        System.out.println(firstElementOfSortedList + firstElementOfUnsortedList);
+        Assert.assertFalse("When list is unsorted, the first price is: " + firstElementOfUnsortedList + " and when the list is sorted by higher price, the first price is: " + firstElementOfSortedList,firstElementOfSortedList.equals(firstElementOfUnsortedList));
     }
 
     public String loginToHomePage(ChromeDriver driver, String userName) {
